@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Http\JsonResponse;
    
-class RegisterController extends BaseController
+class UserController extends BaseController
 {
     /**
      * Api Register function
@@ -32,7 +32,7 @@ class RegisterController extends BaseController
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->plainTextToken;
+        $success['token'] =  $user->createToken('NewsApp')->plainTextToken;
         $success['name'] =  $user->name;
    
         return $this->sendResponse($success, 'User register successfully.');
@@ -47,7 +47,7 @@ class RegisterController extends BaseController
     {
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyApp')->plainTextToken; 
+            $success['token'] =  $user->createToken('NewsApp')->plainTextToken; 
             $success['name'] =  $user->name;
    
             return $this->sendResponse($success, 'User login successfully.');
@@ -55,5 +55,18 @@ class RegisterController extends BaseController
         else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
+    }
+
+    /**
+     * Api logout function
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request): JsonResponse
+    {   
+        $success['name'] =  $request->user()->name;
+        $request->user()->tokens()->delete();
+        return $this->sendResponse($success, 'User logged out successfully.');
+
     }
 }

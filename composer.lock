@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eba04bbb24b3180d2a6614993a886c4b",
+    "content-hash": "54348fb2f44e61536a9bcf0fad2ea60a",
     "packages": [
         {
             "name": "brick/math",
@@ -3174,6 +3174,63 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "robtrehy/laravel-user-preferences",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobTrehy/LaravelUserPreferences.git",
+                "reference": "a56560df21ad8226484ac95f2d126b2ec36cd776"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobTrehy/LaravelUserPreferences/zipball/a56560df21ad8226484ac95f2d126b2ec36cd776",
+                "reference": "a56560df21ad8226484ac95f2d126b2ec36cd776",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^9.0|^10.0|^11.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^6.4|^7.0|^8.0",
+                "orchestra/testbench": "^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.5|^10.5|^11.0",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RobTrehy\\LaravelUserPreferences\\UserPreferencesServiceProvider"
+                    ],
+                    "aliases": {
+                        "UserPreferences": "RobTrehy\\LaravelUserPreferences\\UserPreferencesFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RobTrehy\\LaravelUserPreferences\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rob Trehy",
+                    "email": "robert@trehy.co.uk"
+                }
+            ],
+            "description": "A package for Laravel to store user preferences for your project.",
+            "support": {
+                "issues": "https://github.com/RobTrehy/LaravelUserPreferences/issues",
+                "source": "https://github.com/RobTrehy/LaravelUserPreferences/tree/3.1.1"
+            },
+            "time": "2024-03-19T14:43:27+00:00"
         },
         {
             "name": "symfony/clock",
