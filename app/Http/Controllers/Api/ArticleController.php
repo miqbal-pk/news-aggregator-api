@@ -7,97 +7,66 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Http\Resources\ArticleResource;
 use Illuminate\Http\JsonResponse;
+use DB;
 
 class ArticleController extends BaseController
-{/**
-     * Display a listing of the resource.
+{
+    
+    /**
+     * Display a listing of the Articles.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(): JsonResponse
     {
-        $Articles = Article::all();
+        $articles = DB::table('articles')->paginate(20);
     
-        return $this->sendResponse(ArticleResource::collection($Articles), 'Articles retrieved successfully.');
+        return $this->sendResponse($articles, 'Articles retrieved successfully.');
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request): JsonResponse
-    {
-        $input = $request->all();
-   
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
-        }
-   
-        $Article = Article::create($input);
-   
-        return $this->sendResponse(new ArticleResource($Article), 'Article created successfully.');
-    } 
    
     /**
-     * Display the specified resource.
+     * Display the specified Article.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id): JsonResponse
     {
-        $Article = Article::find($id);
+        $article = Article::find($id);
   
-        if (is_null($Article)) {
+        if (is_null($article)) {
             return $this->sendError('Article not found.');
         }
    
-        return $this->sendResponse(new ArticleResource($Article), 'Article retrieved successfully.');
+        return $this->sendResponse(new ArticleResource($article), 'Article retrieved successfully.');
+    }
+
+    /**
+     * Searching the Articles.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $inputs = $request->all();
+
+        $articles = DB::table('articles');
+
+        if(isset($inputs['category'])){
+            $articles = $articles->where('category', $inputs['category']);
+        } else if(isset($inputs['source'])){
+            $articles = $articles->where('source_name', $inputs['source']);
+        }else if(isset($inputs['q'])){
+            $articles = $articles->where('content', 'like', '%'.$inputs['q'].'%')
+                                ->orwhere('title', 'like','%'.$inputs['q'].'%' )
+                                ->orwhere('description', 'like', '%'.$inputs['q'].'%');
+        }else if(isset($inputs['published_date'])){
+            $articles = $articles->where('published_at', $inputs['published_date']);
+        }
+
+        $articles = $articles->get();
+    
+        return $this->sendResponse($articles, 'Articles retrieved successfully.');
     }
     
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Article $Article): JsonResponse
-    {
-        $input = $request->all();
-   
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
-        }
-   
-        $Article->name = $input['name'];
-        $Article->detail = $input['detail'];
-        $Article->save();
-   
-        return $this->sendResponse(new ArticleResource($Article), 'Article updated successfully.');
-    }
-   
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Article $Article): JsonResponse
-    {
-        $Article->delete();
-   
-        return $this->sendResponse([], 'Article deleted successfully.');
-    }
 }

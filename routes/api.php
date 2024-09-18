@@ -16,7 +16,17 @@ Route::middleware('auth:sanctum')->group( function () {
 
     Route::controller(UserController::class)->group(function(){
         Route::post('logout', 'logout');
+        Route::get('get-user-preferences', 'getUserPreferences');
+        Route::post('set-user-preferences', 'setUserPreferences');
+        Route::get('get-user-feeds', 'getUserFeeds');
     });
 
-    Route::resource('articles', ArticleController::class);
+    Route::controller(ArticleController::class)->group(function(){
+        Route::get('articles', 'index');
+        Route::get('article/{id}', 'show');
+        Route::get('articles/search', 'search');
+        
+    });
+
+    // Route::get('articles', ArticleController::class);
 });

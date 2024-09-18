@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Http\JsonResponse;
+use RobTrehy\LaravelUserPreferences\UserPreferences;
+use App\Models\Article;
    
 class UserController extends BaseController
 {
@@ -68,5 +70,58 @@ class UserController extends BaseController
         $request->user()->tokens()->delete();
         return $this->sendResponse($success, 'User logged out successfully.');
 
+    }
+
+    public function getUserPreferences(Request $request)
+    {
+        $preferences  = UserPreferences::all();
+        $success['preferences'] = $preferences;
+        return $this->sendResponse($success, 'User Preferences');
+    }
+
+    public function setUserPreferences(Request $request): JsonResponse
+    {
+        
+        if(isset($request->authors))
+            UserPreferences::set('authors', $request->authors);
+
+        if(isset($request->sources))
+            UserPreferences::set('sources', $request->sources);
+
+        if(isset($request->categories))
+            UserPreferences::set('categories', $request->categories);
+
+            $success['name'] =  $request->user()->name;
+   
+        return $this->sendResponse($success, 'User Preferences are stored Successfully');
+
+
+    }
+
+    public function getUserFeeds(Request $request)
+    {
+        $preferences  =  UserPreferences::all();
+
+        if(empty($preferences)){
+            $success['status'] = 'OK';
+            return $this->sendResponse($success, 'You have no preference');
+        }
+
+        $articlesQuery = Article::all();
+        if(isset($preferences->authors)){
+            $articlesQuery = $articlesQuery->whereIn('author', $preferences->authors);
+        } 
+
+        if(isset($preferences->sources)){
+            $articlesQuery = $articlesQuery->whereIn('source_name', $preferences->sources);
+        }
+
+        if(isset($preferences->categories)){
+            $articlesQuery = $articlesQuery->whereIn('category', $preferences->categories);
+        }
+
+        $success ['articles'] =$articlesQuery;
+
+        return $this->sendResponse($success, 'Your news feed');
     }
 }
