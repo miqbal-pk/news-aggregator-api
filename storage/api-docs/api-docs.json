@@ -1,0 +1,201 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "News-aggregator API Documentation",
+        "description": "Swagger OpenAPI Description for case study of news aggregator api",
+        "contact": {
+            "email": "iqbal.shaheen0101@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/articles": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "operationId": "93ded9e31119e6bbb22455c72ef97f19",
+                "responses": {
+                    "200": {
+                        "description": "returns all articles"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/article/{id}": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "operationId": "cc7a17f59973033eb40d6b13de411848",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Article ID",
+                        "example": "10"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "searched  articles"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/articles/search": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "operationId": "b2a37f58fc1f822aac6033aeca788724",
+                "parameters": [
+                    {
+                        "name": "source",
+                        "in": "query",
+                        "description": "source",
+                        "example": "bbc-news"
+                    },
+                    {
+                        "name": "published_at",
+                        "in": "query",
+                        "description": "published_at",
+                        "example": "2023-12-03"
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "category",
+                        "example": "sport"
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "keywords",
+                        "example": "Olympics 2024"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "searched  articles"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/get-user-preference": {
+            "get": {
+                "summary": "Get user preferences",
+                "operationId": "3ca71802582967217d0163382e260380",
+                "responses": {
+                    "200": {
+                        "description": "An example resource"
+                    }
+                }
+            }
+        },
+        "/api/set-user-preference": {
+            "post": {
+                "summary": "Store user preferences",
+                "operationId": "571a9408fd5adb0e0a69a0ae9274992b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "preferences[authors][0]": {
+                                        "description": "Author 1",
+                                        "type": "string"
+                                    },
+                                    "preferences[authors][1]": {
+                                        "description": "Author 2",
+                                        "type": "string"
+                                    },
+                                    "preferences[categories][0]": {
+                                        "description": "sport",
+                                        "type": "string"
+                                    },
+                                    "preferences[categories][1]": {
+                                        "description": "art",
+                                        "type": "string"
+                                    },
+                                    "preferences[sources][0]": {
+                                        "description": "bbc-news",
+                                        "type": "string"
+                                    },
+                                    "preferences[sources][1]": {
+                                        "description": "bbc-news",
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Preferences saved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/get-user-feeds": {
+            "get": {
+                "summary": "Get user feeds based on preferences",
+                "operationId": "502bbf0c8f52a3ca7175f1dca7d84b29",
+                "responses": {
+                    "200": {
+                        "description": "An example resource"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Articles",
+            "description": "Articles"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}

@@ -9,13 +9,28 @@ use App\Http\Resources\ArticleResource;
 use Illuminate\Http\JsonResponse;
 use DB;
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="News-aggregator API Documentation",
+ *      description="Swagger OpenAPI Description for case study of news aggregator api",
+ *      @OA\Contact(
+ *          email="iqbal.shaheen0101@gmail.com"
+ *      ),
+ * )
+ * 
+ */
 class ArticleController extends BaseController
 {
     
     /**
-     * Display a listing of the Articles.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     
+     *     path="/api/articles",
+     *     tags ={"Articles"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response="200", description="returns all articles")
+     * )
      */
     public function index(): JsonResponse
     {
@@ -25,10 +40,20 @@ class ArticleController extends BaseController
     }
    
     /**
-     * Display the specified Article.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/api/article/{id}",
+     *     tags ={"Articles"},
+     *     security={{"sanctum":{}}},
+     *      @OA\Parameter  (
+     *       description="Article ID",
+     *       in="path",
+     *       name="id",
+     *       example="10",
+     * 
+     *    ),
+     *   
+     *     @OA\Response(response="200", description="searched  articles")
+     * )
      */
     public function show($id): JsonResponse
     {
@@ -42,9 +67,37 @@ class ArticleController extends BaseController
     }
 
     /**
-     * Searching the Articles.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/api/articles/search",
+     *      tags ={"Articles"},
+     *      security={{"sanctum":{}}},
+     *      @OA\Parameter  (
+     *       description="source",
+     *       in="query",
+     *       name="source",
+     *       example="bbc-news",
+     *    ),
+     *    @OA\Parameter  (
+     *       description="published_at",
+     *       in="query",
+     *       name="published_at",
+     *       example="2023-12-03",
+     *    ),
+     *    
+     *    @OA\Parameter  (
+     *       description="category",
+     *       in="query",
+     *       name="category",
+     *       example="sport",
+     *    ),
+     *    @OA\Parameter  (
+     *       description="keywords",
+     *       in="query",
+     *       name="q",
+     *       example="Olympics 2024",
+     *    ),
+     *     @OA\Response(response="200", description="searched  articles")
+     * )
      */
     public function search(Request $request): JsonResponse
     {

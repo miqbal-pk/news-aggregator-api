@@ -72,6 +72,13 @@ class UserController extends BaseController
 
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/get-user-preference",
+     *     summary="Get user preferences",
+     *     @OA\Response(response="200", description="An example resource")
+     * )
+     */
     public function getUserPreferences(Request $request)
     {
         $preferences  = UserPreferences::all();
@@ -79,6 +86,59 @@ class UserController extends BaseController
         return $this->sendResponse($success, 'User Preferences');
     }
 
+     /**
+     * @OA\Post(
+     *     path="/api/set-user-preference",
+     *     summary="Store user preferences",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="preferences[authors][0]",
+     *                     description="Author 1",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="preferences[authors][1]",
+     *                     description="Author 2",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="preferences[categories][0]",
+     *                     description="sport",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="preferences[categories][1]",
+     *                     description="art",
+     *                     type="string"
+     *                 ),
+     *                  @OA\Property(
+     *                     property="preferences[sources][0]",
+     *                     description="bbc-news",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="preferences[sources][1]",
+     *                     description="bbc-news",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(property="name", type="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Preferences saved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function setUserPreferences(Request $request): JsonResponse
     {
         
@@ -98,6 +158,13 @@ class UserController extends BaseController
 
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/get-user-feeds",
+     *     summary="Get user feeds based on preferences",
+     *     @OA\Response(response="200", description="An example resource")
+     * )
+     */
     public function getUserFeeds(Request $request)
     {
         $preferences  =  UserPreferences::all();
