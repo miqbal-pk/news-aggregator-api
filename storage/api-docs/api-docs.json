@@ -22,7 +22,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -48,7 +48,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -92,26 +92,178 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
         },
-        "/api/get-user-preference": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Register User",
+                "operationId": "482fd8cbb98dc3225fa0e7ac40c1abe6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "User name",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "User email",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "set password",
+                                        "type": "string"
+                                    },
+                                    "c_password": {
+                                        "description": "Confirm password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User Registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Login User",
+                "operationId": "afd167661891a2c4c1b49a04643b9223",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "User email",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "User password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User logedin successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Logout User",
+                "operationId": "9872a1ded930c0faa99c7f184b4cd654",
+                "responses": {
+                    "200": {
+                        "description": "User loged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/get-user-preferences": {
             "get": {
+                "tags": [
+                    "User Preference"
+                ],
                 "summary": "Get user preferences",
-                "operationId": "3ca71802582967217d0163382e260380",
+                "operationId": "a8c7163fa925040498784a5c619792d6",
                 "responses": {
                     "200": {
                         "description": "An example resource"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/api/set-user-preference": {
+        "/api/set-user-preferences": {
             "post": {
+                "tags": [
+                    "User Preference"
+                ],
                 "summary": "Store user preferences",
-                "operationId": "571a9408fd5adb0e0a69a0ae9274992b",
+                "operationId": "1abc59535cf4dbbdc141aa8e16db9a2b",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -167,18 +319,31 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/get-user-feeds": {
             "get": {
+                "tags": [
+                    "User Preference"
+                ],
                 "summary": "Get user feeds based on preferences",
                 "operationId": "502bbf0c8f52a3ca7175f1dca7d84b29",
                 "responses": {
                     "200": {
                         "description": "An example resource"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -186,10 +351,25 @@
         {
             "name": "Articles",
             "description": "Articles"
+        },
+        {
+            "name": "User",
+            "description": "User"
+        },
+        {
+            "name": "User Preference",
+            "description": "User Preference"
         }
     ],
     "components": {
         "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "A short description for security scheme",
+                "name": "token",
+                "in": "header",
+                "scheme": "bearer"
+            },
             "sanctum": {
                 "type": "apiKey",
                 "description": "Enter token in format (Bearer <token>)",

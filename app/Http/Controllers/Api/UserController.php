@@ -10,13 +10,53 @@ use Validator;
 use Illuminate\Http\JsonResponse;
 use RobTrehy\LaravelUserPreferences\UserPreferences;
 use App\Models\Article;
+use DB;
    
 class UserController extends BaseController
 {
     /**
-     * Api Register function
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags ={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     summary="Register User",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="name",
+     *                     description="User name",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     description="User email",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     description="set password",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="c_password",
+     *                     description="Confirm password",
+     *                     type="string"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User Registered successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
      */
     public function register(Request $request): JsonResponse
     {
@@ -41,9 +81,38 @@ class UserController extends BaseController
     }
    
     /**
-     * Api login function
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags ={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     summary="Login User",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="email",
+     *                     description="User email",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     description="User password",
+     *                     type="string"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User logedin successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
      */
     public function login(Request $request): JsonResponse
     {
@@ -60,9 +129,19 @@ class UserController extends BaseController
     }
 
     /**
-     * Api logout function
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     *     path="/api/logout",
+     *     tags ={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     summary="Logout User",
+     *     @OA\Response(
+     *         response=200,
+     *         description="User loged out successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
      */
     public function logout(Request $request): JsonResponse
     {   
@@ -74,7 +153,9 @@ class UserController extends BaseController
 
     /**
      * @OA\Get(
-     *     path="/api/get-user-preference",
+     *     path="/api/get-user-preferences",
+     *     tags ={"User Preference"},
+     *     security={{"bearerAuth":{}}},
      *     summary="Get user preferences",
      *     @OA\Response(response="200", description="An example resource")
      * )
@@ -88,7 +169,9 @@ class UserController extends BaseController
 
      /**
      * @OA\Post(
-     *     path="/api/set-user-preference",
+     *     path="/api/set-user-preferences",
+     *     tags ={"User Preference"},
+     *     security={{"bearerAuth":{}}},
      *     summary="Store user preferences",
      *     @OA\RequestBody(
      *         required=true,
@@ -161,6 +244,8 @@ class UserController extends BaseController
     /**
      * @OA\Get(
      *     path="/api/get-user-feeds",
+     *     tags ={"User Preference"},
+     *     security={{"bearerAuth":{}}},
      *     summary="Get user feeds based on preferences",
      *     @OA\Response(response="200", description="An example resource")
      * )
@@ -174,20 +259,20 @@ class UserController extends BaseController
             return $this->sendResponse($success, 'You have no preference');
         }
 
-        $articlesQuery = Article::all();
+        $articlesQuery = DB::table('articles');
         if(isset($preferences->authors)){
             $articlesQuery = $articlesQuery->whereIn('author', $preferences->authors);
         } 
 
         if(isset($preferences->sources)){
-            $articlesQuery = $articlesQuery->whereIn('source_name', $preferences->sources);
+            $articlesQuery = $articlesQuery->orWhereIn('source_name', $preferences->sources);
         }
 
         if(isset($preferences->categories)){
-            $articlesQuery = $articlesQuery->whereIn('category', $preferences->categories);
+            $articlesQuery = $articlesQuery->orWhereIn('category', $preferences->categories);
         }
 
-        $success ['articles'] =$articlesQuery;
+        $success ['articles'] =$articlesQuery->orderBy('id', 'DESC')->get();
 
         return $this->sendResponse($success, 'Your news feed');
     }

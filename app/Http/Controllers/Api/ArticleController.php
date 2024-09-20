@@ -28,13 +28,13 @@ class ArticleController extends BaseController
      *     
      *     path="/api/articles",
      *     tags ={"Articles"},
-     *     security={{"sanctum":{}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(response="200", description="returns all articles")
      * )
      */
     public function index(): JsonResponse
     {
-        $articles = DB::table('articles')->paginate(20);
+        $articles = DB::table('articles')->orderBy('id', 'DESC')->paginate(20);
     
         return $this->sendResponse($articles, 'Articles retrieved successfully.');
     }
@@ -43,7 +43,7 @@ class ArticleController extends BaseController
      * @OA\Get(
      *     path="/api/article/{id}",
      *     tags ={"Articles"},
-     *     security={{"sanctum":{}}},
+     *     security={{"bearerAuth":{}}},
      *      @OA\Parameter  (
      *       description="Article ID",
      *       in="path",
@@ -70,7 +70,7 @@ class ArticleController extends BaseController
      * @OA\Get(
      *     path="/api/articles/search",
      *      tags ={"Articles"},
-     *      security={{"sanctum":{}}},
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter  (
      *       description="source",
      *       in="query",
@@ -117,7 +117,7 @@ class ArticleController extends BaseController
             $articles = $articles->where('published_at', $inputs['published_date']);
         }
 
-        $articles = $articles->get();
+        $articles = $articles->orderBy('id', 'DESC')->get();
     
         return $this->sendResponse($articles, 'Articles retrieved successfully.');
     }
